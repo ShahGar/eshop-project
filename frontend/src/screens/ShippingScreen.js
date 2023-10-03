@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useState} from "react";
 import Header from "../components/Header";
-import { saveShippingAddress } from "../Redux/Actions/cartActions";
+import { useDispatch, useSelector } from "react-redux";
+import { saveShippingAddress } from "../Redux/Actions/CartActions";
 
 const ShippingScreen = ({ history }) => {
   window.scrollTo(0, 0);
@@ -13,6 +13,8 @@ const ShippingScreen = ({ history }) => {
   const [city, setCity] = useState(shippingAddress.city);
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
   const [country, setCountry] = useState(shippingAddress.country);
+
+
 
   const dispatch = useDispatch();
 

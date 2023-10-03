@@ -1,10 +1,12 @@
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../LoadingError/Error";
 import Toast from "./../LoadingError/Toast";
 import Loading from "./../LoadingError/Loading";
+import Message from "../LoadingError/Error";
 import { toast } from "react-toastify";
 import { updateUserProfile } from "../../Redux/Actions/userActions";
+
 
 const ProfileTabs = () => {
   const [name, setName] = useState("");
@@ -20,6 +22,8 @@ const ProfileTabs = () => {
     autoClose: 2000,
   };
 
+
+
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
@@ -27,7 +31,6 @@ const ProfileTabs = () => {
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { loading: updateLoading } = userUpdateProfile;
-
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -49,13 +52,14 @@ const ProfileTabs = () => {
       }
     }
   };
+
   return (
     <>
-      <Toast />
-      {error && <Message variant="alert-danger">{error}</Message>}
-      {loading && <Loading />}
-      {updateLoading && <Loading />}
-      <form className="row  form-container" onSubmit={submitHandler}>
+    <Toast/>
+    {error && <Message variant="alert-danger">{error}</Message>}
+    {loading && <Loading />}
+    {updateLoading && <Loading />}
+      <form className="row  form-container" onSubmit={submitHandler} >
         <div className="col-md-6">
           <div className="form">
             <label for="account-fn">UserName</label>
@@ -65,6 +69,7 @@ const ProfileTabs = () => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
+              
             />
           </div>
         </div>
@@ -73,11 +78,11 @@ const ProfileTabs = () => {
           <div className="form">
             <label for="account-email">E-mail Address</label>
             <input
-              className="form-control"
-              type="email"
-              value={email}
+              className="form-control" 
+             value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
+              
             />
           </div>
         </div>
@@ -99,7 +104,7 @@ const ProfileTabs = () => {
               className="form-control"
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}          
             />
           </div>
         </div>

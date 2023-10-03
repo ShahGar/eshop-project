@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import {Link} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Actions/userActions";
 
 const Header = () => {
-  const [keyword, setKeyword] = useState();
-  const dispatch = useDispatch();
-  let history = useHistory();
 
+
+  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
   const userLogin = useSelector((state) => state.userLogin);
@@ -17,14 +16,6 @@ const Header = () => {
     dispatch(logout());
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    if (keyword.trim()) {
-      history.push(`/search/${keyword}`);
-    } else {
-      history.push("/");
-    }
-  };
   return (
     <div>
       {/* Top Header */}
@@ -68,7 +59,7 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="col-6 d-flex align-items-center justify-content-end Login-Register">
-                  {userInfo ? (
+                {userInfo ? (
                     <div className="btn-group">
                       <button
                         type="button"
@@ -93,7 +84,7 @@ const Header = () => {
                         </Link>
                       </div>
                     </div>
-                  ) : (
+                ) : (
                     <div className="btn-group">
                       <button
                         type="button"
@@ -114,20 +105,20 @@ const Header = () => {
                         </Link>
                       </div>
                     </div>
-                  )}
-
+               
+                )}
                   <Link to="/cart" className="cart-mobile-icon">
                     <i className="fas fa-shopping-bag"></i>
                     <span className="badge">{cartItems.length}</span>
                   </Link>
                 </div>
                 <div className="col-12 d-flex align-items-center">
-                  <form onSubmit={submitHandler} className="input-group">
+                  <form  className="input-group">
                     <input
                       type="search"
                       className="form-control rounded search"
                       placeholder="Search"
-                      onChange={(e) => setKeyword(e.target.value)}
+                    
                     />
                     <button type="submit" className="search-button">
                       search
@@ -147,12 +138,12 @@ const Header = () => {
                 </Link>
               </div>
               <div className="col-md-6 col-8 d-flex align-items-center">
-                <form onSubmit={submitHandler} className="input-group">
+                <form  className="input-group">
                   <input
                     type="search"
                     className="form-control rounded search"
                     placeholder="Search"
-                    onChange={(e) => setKeyword(e.target.value)}
+                   
                   />
                   <button type="submit" className="search-button">
                     search
@@ -160,7 +151,7 @@ const Header = () => {
                 </form>
               </div>
               <div className="col-md-3 d-flex align-items-center justify-content-end Login-Register">
-                {userInfo ? (
+              {userInfo ? (
                   <div className="btn-group">
                     <button
                       type="button"
@@ -185,12 +176,12 @@ const Header = () => {
                       </Link>
                     </div>
                   </div>
-                ) : (
+              ) : (
                   <>
                     <Link to="/register">Register</Link>
                     <Link to="/login">Login</Link>
                   </>
-                )}
+              )}
 
                 <Link to="/cart">
                   <i className="fas fa-shopping-bag"></i>

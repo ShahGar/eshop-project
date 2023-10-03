@@ -1,21 +1,30 @@
 import express from "express";
-import products from "./data/Products.js";
-const app = express();
+import dotenv from "dotenv";
+import connectDatabase from "./config/MongoDb.js";
+import ImportData from "./DataImport.js";
+import productRoute from "./Routes/ProductRoutes.js";
+import { errorHandler, notFound } from "./Middleware/Errors.js";
+import userRouter from "./Routes/UserRoutes.js";
+import orderRouter from "./Routes/orderRoutes.js"
 
-//LOAD PRODUCT FROM SERVER
-app.get("/api/products", (req, res) => {
-res.json(products);
-});
-
-//SINGLE PRODUCT FROM SERVER
-app.get("/api/products/:id", (req, res) => {
-    const product = products.find((p) => p._id === req.params.id);
-    res.json(product);
-    });
+dotenv.config();
+connectDatabase();
+const app = express(); 
+app.use(express.json());
 
 
-app.get("/", (req, res) => {
-    res.send("API is Running.....");
-    });
+//API
+app.use("/api/import", ImportData);
+app.use("/api/products", productRoute);    
+app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
 
-app.listen(5000, console.log("server running...."));
+
+
+// ERROR HANDLER
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 1000;
+
+app.listen(PORT, console.log(`server run in port ${PORT}`));

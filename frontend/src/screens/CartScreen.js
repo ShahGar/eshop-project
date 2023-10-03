@@ -2,35 +2,37 @@ import React, { useEffect } from "react";
 import Header from "./../components/Header";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removefromcart } from "./../Redux/Actions/cartActions";
+import {addToCart, removefromcart} from "../../src/Redux/Actions/CartActions.js";
 
-const CartScreen = ({ match, location, history }) => {
+const CartScreen = ({match, location, history}) => {
   window.scrollTo(0, 0);
   const dispatch = useDispatch();
   const productId = match.params.id;
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+const cart = useSelector((state) => state.cart);
+const { cartItems } = cart;
 
-  const total = cartItems.reduce((a, i) => a + i.qty * i.price, 0).toFixed(2);
+const total = cartItems.reduce((a, i) => a + i.qty * i.price, 0).toFixed(2);
 
-  useEffect(() => {
-    if (productId) {
-      dispatch(addToCart(productId, qty));
-    }
-  }, [dispatch, productId, qty]);
+const checkOutHandler = () => {
+  history.push("/login?redirect=shipping");
+};
 
-  const checkOutHandler = () => {
-    history.push("/login?redirect=shipping");
-  };
+const removeFromCartHandle = (id) => {
+  dispatch(removefromcart(id));
+};
 
-  const removeFromCartHandle = (id) => {
-    dispatch(removefromcart(id));
-  };
+useEffect(() => {
+  if (productId) {
+    dispatch(addToCart(productId, qty));
+  }
+}, [dispatch, productId, qty]);
+
+
   return (
     <>
-      <Header />
+    <Header/>
       {/* Cart */}
       <div className="container">
         {cartItems.length === 0 ? (
@@ -45,34 +47,38 @@ const CartScreen = ({ match, location, history }) => {
             >
               SHOPPING NOW
             </Link>
-          </div>
-        ) : (
+            </div>
+        )
+        :
+        (
           <>
-            <div className=" alert alert-info text-center mt-3">
+              <div className=" alert alert-info text-center mt-3">
               Total Cart Products
               <Link className="text-success mx-2" to="/cart">
-                ({cartItems.length})
+              ({cartItems.length})
               </Link>
             </div>
-            {/* cartiterm */}
-            {cartItems.map((item) => (
-              <div className="cart-iterm row">
-                <div
-                  onClick={() => removeFromCartHandle(item.product)}
-                  className="remove-button d-flex justify-content-center align-items-center"
-                >
-                  <i className="fas fa-times"></i>
-                </div>
-                <div className="cart-image col-md-3">
-                  <img src={item.image} alt={item.name} />
-                </div>
-                <div className="cart-text col-md-5 d-flex align-items-center">
-                  <Link to={`/products/${item.product}`}>
-                    <h4>{item.name}</h4>
-                  </Link>
-                </div>
-                <div className="cart-qty col-md-2 col-sm-5 mt-md-5 mt-3 mt-md-0 d-flex flex-column justify-content-center">
-                  <h6>QUANTITY</h6>
+
+           {/* cartiterm */}
+
+           {cartItems.map((item) => (
+                            <div className="cart-iterm row">
+                            <div
+                             onClick={() => removeFromCartHandle(item.product)}
+                              className="remove-button d-flex justify-content-center align-items-center"
+                            >
+                              <i className="fas fa-times"></i>
+                            </div>
+                            <div className="cart-image col-md-3">
+                            <img src={item.image} alt={item.name} />
+                            </div>
+                            <div className="cart-text col-md-5 d-flex align-items-center">
+                            <Link to={`/products/${item.product}`}>
+                             <h4>{item.name}</h4>
+                            </Link>
+                            </div>
+                            <div className="cart-qty col-md-2 col-sm-5 mt-md-5 mt-3 mt-md-0 d-flex flex-column justify-content-center">
+                              <h6>QUANTITY</h6>
                   <select
                     value={item.qty}
                     onChange={(e) =>
@@ -85,13 +91,19 @@ const CartScreen = ({ match, location, history }) => {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div className="cart-price mt-3 mt-md-0 col-md-2 align-items-sm-end align-items-start  d-flex flex-column justify-content-center col-sm-7">
-                  <h6>PRICE</h6>
-                  <h4>${item.price}</h4>
-                </div>
-              </div>
-            ))}
+                                
+                           
+                            </div>
+                            <div className="cart-price mt-3 mt-md-0 col-md-2 align-items-sm-end align-items-start  d-flex flex-column justify-content-center col-sm-7">
+                            <h6>PRICE</h6>
+                            <h4>${item.price}</h4>
+                            </div>
+                          </div>
+           ))
+            } 
+           
+
+            
 
             {/* End of cart iterms */}
             <div className="total">
@@ -108,9 +120,15 @@ const CartScreen = ({ match, location, history }) => {
                   <button onClick={checkOutHandler}>Checkout</button>
                 </div>
               )}
+                
+            
             </div>
+          
           </>
-        )}
+        )
+         }
+
+        
       </div>
     </>
   );

@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "./../components/Header";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails, payOrder } from "../Redux/Actions/OrderActions";
+import { getOrderDetails } from "../Redux/Actions/OrderActions";
 import Loading from "./../components/LoadingError/Loading";
 import Message from "./../components/LoadingError/Error";
 import moment from "moment";
-import axios from "axios";
-import { ORDER_PAY_RESET } from "../Redux/Constants/OrderConstants";
+
 
 const OrderScreen = ({ match }) => {
   window.scrollTo(0, 0);
-  const [sdkReady, setSdkReady] = useState(false);
   const orderId = match.params.id;
   const dispatch = useDispatch();
-
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
-  const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay;
 
   if (!loading) {
     const addDecimals = (num) => {
@@ -32,38 +27,14 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
-    const addPayPalScript = async () => {
-      const { data: clientId } = await axios.get("/api/config/paypal");
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
-    if (!order || successPay) {
-      dispatch({ type: ORDER_PAY_RESET });
-      dispatch(getOrderDetails(orderId));
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
-      }
-    }
-  }, [dispatch, orderId, successPay, order]);
-
-  const successPaymentHandler = (paymentResult) => {
-    dispatch(payOrder(orderId, paymentResult));
-  };
-
+	dispatch(getOrderDetails(orderId));
+	}, [dispatch, orderId]);
   return (
     <>
+    
       <Header />
-      <div className="container">
-        {loading ? (
+            <div className="container">
+            {loading ? (
           <Loading />
         ) : error ? (
           <Message variant="alert-danger">{error}</Message>
@@ -81,9 +52,9 @@ const OrderScreen = ({ match }) => {
                     <h5>
                       <strong>Customer</strong>
                     </h5>
-                    <p>{order.user.name}</p>
+                    <p> {order.user.name}</p>
                     <p>
-                      <a href={`mailto:${order.user.email}`}>
+                    <a href={`mailto:${order.user.email}`}>
                         {order.user.email}
                       </a>
                     </p>
@@ -104,6 +75,7 @@ const OrderScreen = ({ match }) => {
                     </h5>
                     <p>Shipping: {order.shippingAddress.country}</p>
                     <p>Pay method: {order.paymentMethod}</p>
+                    
                     {order.isPaid ? (
                       <div className="bg-info p-2 col-12">
                         <p className="text-white text-center text-sm-start">
@@ -133,10 +105,11 @@ const OrderScreen = ({ match }) => {
                       <strong>Deliver to</strong>
                     </h5>
                     <p>
-                      Address: {order.shippingAddress.city},{" "}
+                    Address: {order.shippingAddress.city},{" "}
                       {order.shippingAddress.address},{" "}
                       {order.shippingAddress.postalCode}
                     </p>
+                    
                     {order.isDelivered ? (
                       <div className="bg-info p-2 col-12">
                         <p className="text-white text-center text-sm-start">
@@ -157,7 +130,8 @@ const OrderScreen = ({ match }) => {
 
             <div className="row order-products justify-content-between">
               <div className="col-lg-8">
-                {order.orderItems.length === 0 ? (
+                
+              {order.orderItems.length === 0 ? (
                   <Message variant="alert-info mt-5">
                     Your order is empty
                   </Message>
@@ -185,11 +159,13 @@ const OrderScreen = ({ match }) => {
                     ))}
                   </>
                 )}
-              </div>
+                      </div>
+                  
+                
               {/* total */}
               <div className="col-lg-3 d-flex align-items-end flex-column mt-5 subtotal-order">
                 <table className="table table-bordered">
-                  <tbody>
+                <tbody>
                     <tr>
                       <td>
                         <strong>Products</strong>
@@ -216,23 +192,20 @@ const OrderScreen = ({ match }) => {
                     </tr>
                   </tbody>
                 </table>
-                {!order.isPaid && (
                   <div className="col-12">
-                    {loadingPay && <Loading />}
-                    {!sdkReady ? (
-                      <Loading />
-                    ) : (
+                    
                       <PayPalButton
-                        amount={order.totalPrice}
-                        onSuccess={successPaymentHandler}
+                       
                       />
-                    )}
-                  </div>
-                )}
+                  
               </div>
             </div>
+         </div>
           </>
-        )}
+        )
+        }
+
+        
       </div>
     </>
   );
