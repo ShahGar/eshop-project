@@ -1,12 +1,13 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Actions/userActions";
 
 const Header = () => {
-
-
+  const [keyword, setKeyword] = useState();
   const dispatch = useDispatch();
+  let history = useHistory();
+
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
   const userLogin = useSelector((state) => state.userLogin);
@@ -16,6 +17,14 @@ const Header = () => {
     dispatch(logout());
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (keyword.trim()) {
+      history.push(`/search/${keyword}`);
+    } else {
+      history.push("/");
+    }
+  };
   return (
     <div>
       {/* Top Header */}
@@ -23,8 +32,8 @@ const Header = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-6 d-flex align-items-center display-none">
-              <p>+977 9803447091</p>
-              <p>info@dakshina.com</p>
+              <p>+255 768 356 890</p>
+              <p>info@zpunet.com</p>
             </div>
             <div className=" col-12 col-lg-6 justify-content-center justify-content-lg-end d-flex align-items-center">
               <Link to="">
@@ -59,7 +68,7 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="col-6 d-flex align-items-center justify-content-end Login-Register">
-                {userInfo ? (
+                  {userInfo ? (
                     <div className="btn-group">
                       <button
                         type="button"
@@ -84,7 +93,7 @@ const Header = () => {
                         </Link>
                       </div>
                     </div>
-                ) : (
+                  ) : (
                     <div className="btn-group">
                       <button
                         type="button"
@@ -105,20 +114,20 @@ const Header = () => {
                         </Link>
                       </div>
                     </div>
-               
-                )}
+                  )}
+
                   <Link to="/cart" className="cart-mobile-icon">
                     <i className="fas fa-shopping-bag"></i>
                     <span className="badge">{cartItems.length}</span>
                   </Link>
                 </div>
                 <div className="col-12 d-flex align-items-center">
-                  <form  className="input-group">
+                  <form onSubmit={submitHandler} className="input-group">
                     <input
                       type="search"
                       className="form-control rounded search"
                       placeholder="Search"
-                    
+                      onChange={(e) => setKeyword(e.target.value)}
                     />
                     <button type="submit" className="search-button">
                       search
@@ -138,12 +147,12 @@ const Header = () => {
                 </Link>
               </div>
               <div className="col-md-6 col-8 d-flex align-items-center">
-                <form  className="input-group">
+                <form onSubmit={submitHandler} className="input-group">
                   <input
                     type="search"
                     className="form-control rounded search"
                     placeholder="Search"
-                   
+                    onChange={(e) => setKeyword(e.target.value)}
                   />
                   <button type="submit" className="search-button">
                     search
@@ -151,7 +160,7 @@ const Header = () => {
                 </form>
               </div>
               <div className="col-md-3 d-flex align-items-center justify-content-end Login-Register">
-              {userInfo ? (
+                {userInfo ? (
                   <div className="btn-group">
                     <button
                       type="button"
@@ -176,12 +185,12 @@ const Header = () => {
                       </Link>
                     </div>
                   </div>
-              ) : (
+                ) : (
                   <>
                     <Link to="/register">Register</Link>
                     <Link to="/login">Login</Link>
                   </>
-              )}
+                )}
 
                 <Link to="/cart">
                   <i className="fas fa-shopping-bag"></i>
